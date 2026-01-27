@@ -3,10 +3,16 @@
   "version": "0.1.0",
   "description": "Nodi n8n per WebSocket Server (trigger) e WebSocket Client",
   "license": "MIT",
-  "homepage": "",
-  "keywords": ["n8n-community-node-package", "websocket", "wss", "trigger", "client"],
-  "author": { "name": "", "email": "" },
-  "repository": { "type": "git", "url": "" },
+  "homepage": "https://github.com/massimiliano-andreatta/wss-apocalisse#readme",
+  "keywords": [
+    "n8n-community-node-package",
+    "websocket",
+    "wss",
+    "trigger",
+    "client"
+  ],
+  "author": { "name": "Massimiliano Andreatta", "email": "massimiliano.andreatta@gmail.com" },
+  "repository": { "type": "git", "url": "https://github.com/massimiliano-andreatta/wss-apocalisse.git" },
   "scripts": {
     "build": "n8n-node build",
     "build:watch": "tsc --watch",
@@ -20,7 +26,7 @@
   "files": ["dist"],
   "n8n": {
     "n8nNodesApiVersion": 1,
-    "strict": true,
+    "strict": false,
     "nodes": [
       "dist/nodes/WebSocketServer/WebSocketServer.node.js",
       "dist/nodes/WebSocketClient/WebSocketClient.node.js"
@@ -33,10 +39,6 @@
     "release-it": "^19.0.4",
     "typescript": "5.9.2"
   },
-  "peerDependencies": {
-    "n8n-workflow": "*"
-  },
-  "dependencies": {
-    "ws": "^8.18.0"
-  }
+  "peerDependencies": { "n8n-workflow": "*" },
+  "dependencies": { "ws": "^8.18.0" }
 }

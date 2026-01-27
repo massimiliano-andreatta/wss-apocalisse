@@ -33,9 +33,10 @@ export class WebSocketClient implements INodeType {
         displayName: 'Operazione',
         name: 'operation',
         type: 'options',
+								noDataExpression: true,
         options: [
-          { name: 'Invia messaggio', value: 'send' },
-          { name: 'Invia e attendi risposta', value: 'sendAndReceive' },
+          { name: 'Invia Messaggio', value: 'send' },
+          { name: 'Invia E Attendi Risposta', value: 'sendAndReceive' },
         ],
         default: 'send',
         description: 'Azione da eseguire',
@@ -50,15 +51,15 @@ export class WebSocketClient implements INodeType {
         displayOptions: { show: { operation: ['send', 'sendAndReceive'] } },
       },
       {
-        displayName: 'Usa dato in input',
+        displayName: 'Usa Dato in Input',
         name: 'useInput',
         type: 'boolean',
         default: false,
-        description: 'Se attivo, invia il JSON dell’item in input come messaggio',
+        description: 'Whether to send the input item JSON as the message',
         displayOptions: { show: { operation: ['send', 'sendAndReceive'] } },
       },
       {
-        displayName: 'Timeout risposta (ms)',
+        displayName: 'Timeout Risposta (Ms)',
         name: 'timeout',
         type: 'number',
         default: 5000,
@@ -66,6 +67,7 @@ export class WebSocketClient implements INodeType {
         displayOptions: { show: { operation: ['sendAndReceive'] } },
       },
     ],
+		usableAsTool: true,
   };
 
   async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {

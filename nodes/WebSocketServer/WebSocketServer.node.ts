@@ -54,6 +54,7 @@ export class WebSocketServer implements INodeType {
         description: 'Path (opzionale, per sotto-path)',
       },
     ],
+		usableAsTool: true,
   };
 
   async trigger(this: ITriggerFunctions): Promise<ITriggerResponse> {

@@ -62,18 +62,13 @@ Per pubblicare il pacchetto su [npm](https://www.npmjs.com/):
    ```bash
    npm run release
    ```
-   Oppure usa lo script helper:
+   Oppure lo script helper (verifica login, build e avvia il release):
    ```bash
    ./scripts/publish-to-npm.sh
    ```
 
-   `npm run release` usa [release-it](https://github.com/release-it/release-it): chiede la nuova versione (patch/minor/major), aggiorna `package.json`, crea il tag git, opzionalmente la release su GitHub, e esegue `npm publish`.
-
-3. **Publish rapido** (pubblica la versione già in `package.json` senza wizard):
-   ```bash
-   npm run build && npm publish
-   ```
-   Nota: con `prepublishOnly` attivo, `npm publish` esegue prima i controlli n8n; per il flusso completo con bump di versione è consigliato `npm run release`.
+   `npm run release` usa [release-it](https://github.com/release-it/release-it): chiede la nuova versione (patch/minor/major), aggiorna `package.json`, crea il tag git, opzionalmente la release su GitHub, e esegue `npm publish`.  
+   Il comando diretto `npm publish` è disabilitato da `prepublishOnly` (n8n-node prerelease): usare sempre `npm run release` per pubblicare.
 
 ### Script disponibili
 
@@ -81,7 +76,7 @@ Per pubblicare il pacchetto su [npm](https://www.npmjs.com/):
 |----------------|-----------------------------------------------------------------------------|
 | `npm run release` | Flusso completo: bump versione, changelog, tag git, publish su npm        |
 | `npm run publish:npm` | Alias di `npm run release`                                               |
-| `./scripts/publish-to-npm.sh` | Verifica login, build e avvia `npm run release`                      |
+| `./scripts/publish-to-npm.sh` | Verifica login npm, build e avvia `npm run release`                    |
 
 ## Licenza
 
