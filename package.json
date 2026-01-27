@@ -57,6 +57,9 @@
     "git": {
       "requireCommits": false,
       "requireCleanWorkingDir": false
+    },
+    "hooks": {
+      "before:git:release": "node scripts/fix-changelog-urls.js"
     }
   }
 }
