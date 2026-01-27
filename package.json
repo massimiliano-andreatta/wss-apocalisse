@@ -1,0 +1,42 @@
+{
+  "name": "n8n-nodes-websocket-apocalisse",
+  "version": "0.1.0",
+  "description": "Nodi n8n per WebSocket Server (trigger) e WebSocket Client",
+  "license": "MIT",
+  "homepage": "",
+  "keywords": ["n8n-community-node-package", "websocket", "wss", "trigger", "client"],
+  "author": { "name": "", "email": "" },
+  "repository": { "type": "git", "url": "" },
+  "scripts": {
+    "build": "n8n-node build",
+    "build:watch": "tsc --watch",
+    "dev": "n8n-node dev",
+    "lint": "n8n-node lint",
+    "lint:fix": "n8n-node lint --fix",
+    "release": "n8n-node release",
+    "prepublishOnly": "n8n-node prerelease",
+    "publish:npm": "npm run release"
+  },
+  "files": ["dist"],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "strict": true,
+    "nodes": [
+      "dist/nodes/WebSocketServer/WebSocketServer.node.js",
+      "dist/nodes/WebSocketClient/WebSocketClient.node.js"
+    ]
+  },
+  "devDependencies": {
+    "@n8n/node-cli": "*",
+    "@types/node": "^22.0.0",
+    "@types/ws": "^8.5.0",
+    "release-it": "^19.0.4",
+    "typescript": "5.9.2"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}
