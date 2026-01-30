@@ -99,10 +99,11 @@ Si connette a un server WebSocket (protocollo `ws` o `wss`). **Tre uscite:**
 
 ## Utilizzo in n8n
 
-1. Crea un workflow con **WebSocket Server** come trigger; imposta porta, path e, se serve, host e allowed origins.
+1. Crea un workflow con **APO WebSocket Server** come trigger; imposta porta, path e, se serve, host e allowed origins.
 2. Attiva il workflow: il server ascolta.
 3. Collega le uscite **Connection**, **Message** e **Disconnection** ai nodi successivi per gestire eventi diversi.
-4. In un altro workflow (o da uno script) usa **WebSocket Client** con URL `ws://<host>:<porta>/<path>` per connetterti e inviare/ricevere messaggi; i messaggi ricevuti dal server escono dall’uscita **Message** del trigger.
+4. Per **inviare messaggi** dal workflow: aggiungi **APO WebSocket Server Send**, imposta il nome del nodo APO WebSocket Server (es. "APO WebSocket Server"), scegli **Broadcast** oppure **Invia A Client** (con Client ID, es. `{{ $json.clientId }}` se l’input viene dall’uscita Connection).
+5. Per connetterti da un altro workflow o da uno script: usa **APO WebSocket Client** con URL `ws://<host>:<porta>/<path>`; i messaggi ricevuti dal server escono dall’uscita **Message** del trigger.
 
 ## Link
 

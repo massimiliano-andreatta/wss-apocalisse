@@ -37,6 +37,7 @@
     "strict": false,
     "nodes": [
       "dist/nodes/WebSocketServer/WebSocketServer.node.js",
+      "dist/nodes/WebSocketServerSend/WebSocketServerSend.node.js",
       "dist/nodes/WebSocketClient/WebSocketClient.node.js"
     ]
   },

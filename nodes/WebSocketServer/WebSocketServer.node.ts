@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import type { IncomingMessage } from 'http';
 import type {
   ITriggerFunctions,
@@ -8,22 +9,17 @@ import type {
 import { NodeConnectionTypes } from 'n8n-workflow';
 import type { WebSocket } from 'ws';
 import { WebSocketServer as WSServer } from 'ws';
-
-const serverStore = new Map<string, WSServer>();
-
-function getNodeKey(nodeId: string, workflowId: string): string {
-  return `${workflowId}:${nodeId}`;
-}
+import { ensureClientsMap, clientsStore, getNodeKey, serverStore, serverNodeNameToId } from './shared';
 
 export class WebSocketServer implements INodeType {
   description: INodeTypeDescription = {
-    displayName: 'WebSocket Server',
+    displayName: 'APO WebSocket Server',
     name: 'webSocketServer',
     icon: 'file:webSocketServer.svg',
     group: ['trigger'],
     version: 1,
     description: 'Ascolta connessioni, disconnessioni e messaggi da client WebSocket',
-    defaults: { name: 'WebSocket Server' },
+    defaults: { name: 'APO WebSocket Server' },
     inputs: [] as unknown as INodeTypeDescription['inputs'],
     outputs: [
       { type: NodeConnectionTypes.Main, displayName: 'Connection' },
@@ -31,7 +27,7 @@ export class WebSocketServer implements INodeType {
       { type: NodeConnectionTypes.Main, displayName: 'Message' },
     ],
     triggerPanel: {
-      header: 'Server WebSocket',
+      header: 'APO WebSocket Server',
       executionsHelp: {
         inactive:
           'Attiva il workflow per far ascoltare il server. Uscite: Connessione, Disconnessione, Messaggio.',
@@ -147,17 +143,23 @@ export class WebSocketServer implements INodeType {
 
       server = new WSServer(serverOptions as ConstructorParameters<typeof WSServer>[0]);
 
+      const clientsMap = ensureClientsMap(key);
+
       server.on('connection', (ws: WebSocket, req: IncomingMessage) => {
         const remoteAddress = req.socket.remoteAddress ?? '';
+        const clientId = randomUUID();
 
-        (ws as WebSocket & { _remoteAddress?: string })._remoteAddress = remoteAddress;
+        (ws as WebSocket & { _remoteAddress?: string; _clientId?: string })._remoteAddress = remoteAddress;
+        (ws as WebSocket & { _clientId?: string })._clientId = clientId;
+        clientsMap.set(clientId, ws);
 
-        // Uscita 1: Connessione client
+        // Uscita 1: Connessione client (clientId usabile da WebSocket Server Send)
         emit([
           [
             {
               json: {
                 event: 'connection',
+                clientId,
                 remoteAddress,
                 url: req.url,
                 headers: req.headers as Record<string, string>,
@@ -194,7 +196,7 @@ export class WebSocketServer implements INodeType {
                 json: {
                   event: 'message',
                   ...data,
-                  _meta: { from: remoteAddress },
+                  _meta: { from: remoteAddress, clientId },
                 },
               },
             ],
@@ -204,12 +206,15 @@ export class WebSocketServer implements INodeType {
         // Uscita 2: Disconnessione client
         ws.on('close', () => {
           const addr = (ws as WebSocket & { _remoteAddress?: string })._remoteAddress ?? remoteAddress;
+          const cid = (ws as WebSocket & { _clientId?: string })._clientId;
+          if (cid) clientsMap.delete(cid);
           emit([
             [],
             [
               {
                 json: {
                   event: 'disconnection',
+                  clientId: cid,
                   remoteAddress: addr,
                 },
               },
@@ -228,6 +233,8 @@ export class WebSocketServer implements INodeType {
       });
 
       serverStore.set(key, server);
+      const nodeName = (node.name ?? '').trim();
+      if (nodeName) serverNodeNameToId.set(`${workflowId}:${nodeName}`, node.id);
     };
 
     const closeFunction = async () => {
@@ -239,6 +246,14 @@ export class WebSocketServer implements INodeType {
           /* ignore */
         }
         serverStore.delete(key);
+      }
+      clientsStore.delete(key);
+      const nodeId = key.split(':').slice(1).join(':') || key;
+      for (const [k, id] of serverNodeNameToId) {
+        if (id === nodeId) {
+          serverNodeNameToId.delete(k);
+          break;
+        }
       }
     };
 
