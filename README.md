@@ -1,7 +1,10 @@
 # n8n-nodes-websocket-apocalisse
 
-Plugin n8n con due nodi per WebSocket: **WebSocket Server** (trigger) e **WebSocket Client** (azione).  
-Consente di avviare un server WebSocket, gestire connessioni/disconnessioni/messaggi e connettersi a server esterni per inviare e ricevere messaggi.
+Plugin n8n con tre nodi WebSocket con prefisso **APO**:
+
+- **APO WebSocket Server** (trigger): avvia un server WebSocket, gestisce connessioni, messaggi e disconnessioni; emette un `clientId` per ogni client (usabile dal nodo di invio).
+- **APO WebSocket Server Send** (azione): invia un messaggio in **broadcast** (a tutti i client) oppure a un **client specifico** tramite `clientId`.
+- **APO WebSocket Client** (azione): si connette a un server WebSocket esterno, invia e riceve messaggi.
 
 ## Requisiti
 
@@ -37,15 +40,15 @@ Si apre n8n con i nodi caricati e il watch sui file attivo.
 
 ## Nodi
 
-### WebSocket Server (trigger)
+### APO WebSocket Server (trigger)
 
 Avvia un server WebSocket su una porta e path configurabili. **Tre uscite:**
 
 | Uscita         | Quando viene emessa |
 |----------------|----------------------|
-| **Connection** | Nuovo client connesso |
-| **Message**    | Messaggio ricevuto da un client |
-| **Disconnection** | Client disconnesso |
+| **Connection** | Nuovo client connesso (include `clientId` per invio mirato) |
+| **Message**    | Messaggio ricevuto da un client (include `_meta.clientId`) |
+| **Disconnection** | Client disconnesso (include `clientId`) |
 
 **Parametri principali:**
 
@@ -57,9 +60,21 @@ Avvia un server WebSocket su una porta e path configurabili. **Tre uscite:**
 - **Per-Message Deflate**: abilita compressione messaggi.
 - **Welcome Message**: messaggio inviato al client appena si connette.
 
-Quando il workflow è attivo, il server inizia ad ascoltare; connessioni, messaggi e disconnessioni vengono emessi sulle rispettive uscite.
+Quando il workflow è attivo, il server inizia ad ascoltare; connessioni, messaggi e disconnessioni vengono emessi sulle rispettive uscite. Ogni client riceve un **clientId** (UUID) nell’evento Connection, usabile con **APO WebSocket Server Send** per inviare messaggi a quel client.
 
-### WebSocket Client (azione)
+### APO WebSocket Server Send (azione)
+
+Invia un messaggio ai client connessi all’**APO WebSocket Server** dello stesso workflow.
+
+- **Nome nodo APO WebSocket Server**: nome del trigger "APO WebSocket Server" nel workflow (il server deve essere attivo).
+- **Operazione**:
+  - **Broadcast**: invia lo stesso messaggio a tutti i client connessi.
+  - **Invia A Client**: invia solo al client indicato tramite **Client ID** (es. `{{ $json.clientId }}` dall’uscita Connection del server).
+- **Messaggio**: testo o JSON da inviare.
+- **Usa Dato in Input**: se attivo, il messaggio è il JSON dell’item in input.
+- **Client ID**: (solo per "Invia A Client") ID del client; supporta espressioni, es. `{{ $json.clientId }}`.
+
+### APO WebSocket Client (azione)
 
 Si connette a un server WebSocket (protocollo `ws` o `wss`). **Tre uscite:**
 
