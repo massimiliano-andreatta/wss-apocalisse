@@ -10,13 +10,13 @@ import WebSocket from 'ws';
 
 export class WebSocketClient implements INodeType {
   description: INodeTypeDescription = {
-    displayName: 'WebSocket Client',
+    displayName: 'APO WebSocket Client',
     name: 'webSocketClient',
     icon: 'file:webSocketClient.svg',
     group: ['transform'],
     version: 1,
     description: 'Si connette a un server WebSocket e invia/riceve messaggi',
-    defaults: { name: 'WebSocket Client' },
+    defaults: { name: 'APO WebSocket Client' },
     inputs: [NodeConnectionTypes.Main],
     outputs: [
       { type: NodeConnectionTypes.Main, displayName: 'Connection' },
@@ -183,11 +183,11 @@ export class WebSocketClient implements INodeType {
     const pathNorm = path.startsWith('/') ? path : `/${path}`;
     const url = `${protocol}://${domain}:${port}${pathNorm}`;
     const operation = this.getNodeParameter('operation', 0) as string;
-    const useInput = this.getNodeParameter('useInput', 0) as boolean;
-    const timeout = (this.getNodeParameter('timeout', 0) as number) || 5000;
+    const useInput = (this.getNodeParameter('useInput', 0, false) as boolean) ?? false;
+    const timeout = (this.getNodeParameter('timeout', 0, 5000) as number) || 5000;
     const reconnect = (this.getNodeParameter('reconnect', 0) as boolean) ?? false;
-    const maxAttempts = Math.max(1, (this.getNodeParameter('maxReconnectAttempts', 0) as number) || 3);
-    const reconnectDelayMs = Math.max(0, (this.getNodeParameter('reconnectDelay', 0) as number) || 1000);
+    const maxAttempts = Math.max(1, (this.getNodeParameter('maxReconnectAttempts', 0, 3) as number) || 3);
+    const reconnectDelayMs = Math.max(0, (this.getNodeParameter('reconnectDelay', 0, 1000) as number) || 1000);
 
     const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -231,7 +231,7 @@ export class WebSocketClient implements INodeType {
 
         try {
           if (operation === 'connectAndListen') {
-            const listenTimeout = (this.getNodeParameter('connectAndListenTimeout', 0) as number) || 30000;
+            const listenTimeout = (this.getNodeParameter('connectAndListenTimeout', 0, 30000) as number) || 30000;
             connectionOut.push({
               json: { event: 'connection', connected: true, url },
               pairedItem: { item: i },
@@ -281,7 +281,7 @@ export class WebSocketClient implements INodeType {
           }
 
           if (operation === 'connectOnly') {
-            const sendAfterConnect = (this.getNodeParameter('connectOnlySendMessage', 0) as boolean) ?? false;
+            const sendAfterConnect = (this.getNodeParameter('connectOnlySendMessage', 0, false) as boolean) ?? false;
             if (!sendAfterConnect) {
               connectionOut.push({
                 json: { connected: true, url },
@@ -290,12 +290,12 @@ export class WebSocketClient implements INodeType {
               ws.close();
               break;
             }
-            const useInputConnect = (this.getNodeParameter('connectOnlyUseInput', 0) as boolean) ?? false;
+            const useInputConnect = (this.getNodeParameter('connectOnlyUseInput', 0, false) as boolean) ?? false;
             const msgConnect = useInputConnect
               ? JSON.stringify(items[i].json)
-              : ((this.getNodeParameter('connectOnlyMessage', 0) as string) || '');
+              : ((this.getNodeParameter('connectOnlyMessage', 0, '') as string) || '');
             ws.send(msgConnect);
-            const waitResponse = (this.getNodeParameter('connectOnlyWaitResponse', 0) as boolean) ?? false;
+            const waitResponse = (this.getNodeParameter('connectOnlyWaitResponse', 0, false) as boolean) ?? false;
             if (!waitResponse) {
               connectionOut.push({
                 json: { connected: true, url, sent: true },
@@ -304,7 +304,7 @@ export class WebSocketClient implements INodeType {
               ws.close();
               break;
             }
-            const timeoutConnect = (this.getNodeParameter('connectOnlyTimeout', 0) as number) || 5000;
+            const timeoutConnect = (this.getNodeParameter('connectOnlyTimeout', 0, 5000) as number) || 5000;
             const firstMessage = await new Promise<string>((resolve, reject) => {
               const t = setTimeout(() => {
                 ws.removeAllListeners();
