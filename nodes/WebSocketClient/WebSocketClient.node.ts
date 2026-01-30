@@ -29,8 +29,8 @@ export class WebSocketClient implements INodeType {
         name: 'protocol',
         type: 'options',
         options: [
-          { name: 'ws', value: 'ws' },
-          { name: 'wss', value: 'wss' },
+          { name: 'Ws', value: 'ws' },
+          { name: 'Wss', value: 'wss' },
         ],
         default: 'ws',
         description: 'Protocollo WebSocket (ws = non crittografato, wss = TLS)',
@@ -41,7 +41,7 @@ export class WebSocketClient implements INodeType {
         type: 'string',
         default: 'localhost',
         placeholder: 'localhost',
-        description: 'Host o dominio del server (es. localhost, example.com)',
+        description: 'Host o dominio del server (es. localhost, example.com).',
         required: true,
       },
       {
@@ -57,7 +57,7 @@ export class WebSocketClient implements INodeType {
         type: 'string',
         default: '/',
         placeholder: '/',
-        description: 'Path opzionale (es. /ws, /socket)',
+        description: 'Path opzionale (es. /ws, /socket).',
       },
       {
         displayName: 'Operazione',
@@ -66,7 +66,7 @@ export class WebSocketClient implements INodeType {
 								noDataExpression: true,
         options: [
           { name: 'Solo Connessione', value: 'connectOnly' },
-          { name: 'Connetti e ascolta', value: 'connectAndListen' },
+          { name: 'Connetti E Ascolta', value: 'connectAndListen' },
           { name: 'Invia Messaggio', value: 'send' },
           { name: 'Invia E Attendi Risposta', value: 'sendAndReceive' },
         ],
@@ -74,7 +74,7 @@ export class WebSocketClient implements INodeType {
         description: 'Azione da eseguire',
       },
       {
-        displayName: 'Timeout attesa evento (ms)',
+        displayName: 'Timeout Attesa Evento (Ms)',
         name: 'connectAndListenTimeout',
         type: 'number',
         default: 30000,
@@ -107,7 +107,7 @@ export class WebSocketClient implements INodeType {
         displayOptions: { show: { operation: ['sendAndReceive'] } },
       },
       {
-        displayName: 'Invia messaggio dopo connessione',
+        displayName: 'Invia Messaggio Dopo Connessione',
         name: 'connectOnlySendMessage',
         type: 'boolean',
         default: false,
@@ -115,7 +115,7 @@ export class WebSocketClient implements INodeType {
         displayOptions: { show: { operation: ['connectOnly'] } },
       },
       {
-        displayName: 'Messaggio da inviare',
+        displayName: 'Messaggio Da Inviare',
         name: 'connectOnlyMessage',
         type: 'string',
         default: '',
@@ -124,7 +124,7 @@ export class WebSocketClient implements INodeType {
         displayOptions: { show: { operation: ['connectOnly'], connectOnlySendMessage: [true] } },
       },
       {
-        displayName: 'Usa dato in input come messaggio',
+        displayName: 'Usa Dato in Input Come Messaggio',
         name: 'connectOnlyUseInput',
         type: 'boolean',
         default: false,
@@ -132,7 +132,7 @@ export class WebSocketClient implements INodeType {
         displayOptions: { show: { operation: ['connectOnly'], connectOnlySendMessage: [true] } },
       },
       {
-        displayName: 'Attendi risposta',
+        displayName: 'Attendi Risposta',
         name: 'connectOnlyWaitResponse',
         type: 'boolean',
         default: false,
@@ -140,7 +140,7 @@ export class WebSocketClient implements INodeType {
         displayOptions: { show: { operation: ['connectOnly'], connectOnlySendMessage: [true] } },
       },
       {
-        displayName: 'Timeout risposta (ms)',
+        displayName: 'Timeout Risposta (Ms)',
         name: 'connectOnlyTimeout',
         type: 'number',
         default: 5000,
@@ -155,7 +155,7 @@ export class WebSocketClient implements INodeType {
         description: 'Whether to retry connecting (and the operation) if the connection fails or is lost',
       },
       {
-        displayName: 'Numero massimo tentativi',
+        displayName: 'Numero Massimo Tentativi',
         name: 'maxReconnectAttempts',
         type: 'number',
         default: 3,
@@ -163,11 +163,11 @@ export class WebSocketClient implements INodeType {
         displayOptions: { show: { reconnect: [true] } },
       },
       {
-        displayName: 'Ogni quanto riprovare (ms)',
+        displayName: 'Ogni Quanto Riprovare (Ms)',
         name: 'reconnectDelay',
         type: 'number',
         default: 1000,
-        description: 'Tempo di attesa in millisecondi tra un tentativo e il successivo (es. 1000 = 1 secondo)',
+        description: 'Tempo di attesa in millisecondi tra un tentativo e il successivo (es. 1000 = 1 secondo).',
         displayOptions: { show: { reconnect: [true] } },
       },
     ],

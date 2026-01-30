@@ -63,11 +63,10 @@ export class WebSocketServer implements INodeType {
         type: 'string',
         default: '0.0.0.0',
         placeholder: '0.0.0.0',
-        description:
-          'Indirizzo su cui ascoltare. 0.0.0.0 = tutte le interfacce, 127.0.0.1 = solo localhost',
+        description: 'Indirizzo su cui ascoltare. 0.0.0.0 = tutte le interfacce, 127.0.0.1 = solo localhost.',
       },
       {
-        displayName: 'Max Payload (bytes)',
+        displayName: 'Max Payload (Bytes)',
         name: 'maxPayload',
         type: 'number',
         default: 10485760,
