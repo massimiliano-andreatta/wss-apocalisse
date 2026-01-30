@@ -1,9 +1,7 @@
 # n8n-nodes-websocket-apocalisse
 
-Plugin n8n con due nodi per WebSocket:
-
-- **WebSocket Server** (trigger): avvia un server WebSocket sulla porta scelta; ogni messaggio ricevuto da un client attiva il workflow.
-- **WebSocket Client** (azione): si connette a un URL WebSocket, invia un messaggio e, opzionalmente, aspetta la prima risposta.
+Plugin n8n con due nodi per WebSocket: **WebSocket Server** (trigger) e **WebSocket Client** (azione).  
+Consente di avviare un server WebSocket, gestire connessioni/disconnessioni/messaggi e connettersi a server esterni per inviare e ricevere messaggi.
 
 ## Requisiti
 
@@ -12,15 +10,26 @@ Plugin n8n con due nodi per WebSocket:
 
 ## Installazione
 
+### Da npm (uso in n8n)
+
 ```bash
+npm install n8n-nodes-websocket-apocalisse
+```
+
+Poi in n8n: **Settings → Community nodes → Install** e cerca `n8n-nodes-websocket-apocalisse`, oppure installa globalmente e avvia n8n con i community node abilitati.
+
+### Sviluppo (clone del repository)
+
+```bash
+git clone https://github.com/massimiliano-andreatta/wss-apocalisse.git
+cd wss-apocalisse
 npm install
 npm run build
 ```
 
-## Sviluppo
+Per sviluppo con watch e n8n in locale:
 
 ```bash
-npm install
 npm run dev
 ```
 
