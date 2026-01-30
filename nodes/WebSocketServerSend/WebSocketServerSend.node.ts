@@ -25,7 +25,7 @@ export class WebSocketServerSend implements INodeType {
         type: 'string',
         default: '',
         placeholder: 'APO WebSocket Server',
-        description: 'Nome del nodo "APO WebSocket Server" (trigger) nello stesso workflow a cui inviare il messaggio.',
+        description: 'Nome del nodo "APO WebSocket Server" (trigger) nello stesso workflow a cui inviare il messaggio',
         required: true,
       },
       {
