@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-websocket-apocalisse",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Nodi n8n per WebSocket Server (trigger) e WebSocket Client",
   "license": "MIT",
   "homepage": "https://github.com/massimiliano-andreatta/wss-apocalisse#readme",
